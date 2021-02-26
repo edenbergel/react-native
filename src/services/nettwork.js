@@ -17,3 +17,21 @@ export const getMoviesFromApiAsync = async (queryBody, pageNum) => {
     console.log(error);
   }
 }
+
+export const getMovieDetailsFromApiAsync = async (id) => {
+  if(!id) {
+    return;
+  }
+  try {
+    let response = await fetch(
+      BASE_URL+ 'movie/'+id+'?api_key='+API_KEY+'&language="fr-FR"',
+      {
+        "method":"GET"
+      }
+    );
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.log(error);
+  }
+}
