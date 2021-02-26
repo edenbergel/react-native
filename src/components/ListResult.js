@@ -4,7 +4,7 @@ import { Card } from "./Card";
 
 export default class ListResult extends React.Component {
   render() {
-    const { movies, onReachedEnd } = this.props;
+    const { movies, onReachedEnd, itemClicked } = this.props;
 
     return (
       <SafeAreaView style={styles.Safe}>
@@ -24,6 +24,7 @@ export default class ListResult extends React.Component {
                 posterUrl={movie.item.poster_path}
                 movieTitle={movie.item.title}
                 releaseDate={movie.item.release_date}
+                onClick={() => itemClicked(movie.item.id)}
               />
             )}
             onEndReached={onReachedEnd}

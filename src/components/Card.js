@@ -7,9 +7,9 @@ import {
   View,
 } from "react-native";
 //import Data from "../helpers/filmDatas";
-export const Card = ({ movieTitle, releaseDate, posterUrl }) => {
+export const Card = ({ movieTitle, releaseDate, posterUrl, onClick }) => {
   return (
-    <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD">
+    <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" onPress={onClick}>
       <View style={styles.main_container}>
         <View style={styles.image}>
           {
