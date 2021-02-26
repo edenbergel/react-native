@@ -1,30 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StatusBar, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
+import { StatusBar } from 'react-native';
 import ListResult from './src/components/ListResult';
 import Search from "./src/components/Search";
-import data from "./src/helpers/filmDatas";
+import { getMoviesFromApiAsync } from './src/services/nettwork';
 
 export default function App() {
-    const [searchText, setSearchText] = useState('mon texte');
+    const [searchText, setSearchText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [movies, setMovies] = useState(data);
+    const [movies, setMovies] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
     const getSearchedMovies = (searchedText) => {
-        const newMovies = data.filter(movie => movie.title.toLowerCase().includes(searchedText.toLowerCase()));
-        setMovies(newMovies);
+        console.log(searchedText);
+        setSearchText(searchedText);
+        setCurrentPage(1);
+        setMovies([]);
+        fetchMovies(searchedText, currentPage, true);
     }
 
 
     const onReachedEnd = () => {
+        const incrementPage = currentPage + 1;
+        setCurrentPage(incrementPage);
+
+        if (incrementPage <= totalPages) {
+            fetchMovies(searchText, incrementPage);
+        }
     }
 
-    const fetchMovies = () => {
+    const fetchMovies = (search_text, current_page, is_searching = false) => {
+        setIsLoading(true)
+        console.log(search_text, current_page);
+        getMoviesFromApiAsync(search_text, current_page).then(moviesJson => {
+            if (is_searching = true) {
+                setMovies(moviesJson.results);
+            } else {
+                setMovies([...movies, ...moviesJson.results]);
+            }
+           
+            setTotalPages(moviesJson.total_pages)
+            setIsLoading(false);
+        })
     }
 
     useEffect(() => {
-        fetchMovies();
+        fetchMovies(searchText, currentPage);
         // StatusBar.setHidden(true);
         // StatusBar.setBackgroundColor('#FF573300');
         // StatusBar.setTranslucent(true)
@@ -34,6 +56,7 @@ export default function App() {
         <>
             <StatusBar barstyle={'light-content'}/>
             <Search searchText={searchText} onSearch={(searchedText) => getSearchedMovies(searchedText)}/>
+            { isLoading ? <ActivityIndicator></ActivityIndicator> : null }
             <ListResult isLoading={isLoading} movies={movies} searchedText={searchText} onReachedEnd={onReachedEnd}/>
         </>
     );

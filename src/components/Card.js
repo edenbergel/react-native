@@ -6,20 +6,26 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import Data from "../helpers/filmDatas";
+//import Data from "../helpers/filmDatas";
 export const Card = ({ movieTitle, releaseDate, posterUrl }) => {
   return (
     <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD">
       <View style={styles.main_container}>
         <View style={styles.image}>
-          <Image
-            style={styles.moviePicture}
-            resizeMode={"contain"}
-            source={{
-              uri:
-                "https://www.cinesud-affiches.com/17968-big_default/amazing-spiderman-the-affiche-film.jpg",
-            }}
-          />
+          {
+            posterUrl ? (
+            <Image
+              style={styles.moviePicture}
+              resizeMode={"contain"}
+              source={{
+                uri:
+                  "https://image.tmdb.org/t/p/w500/"+posterUrl,
+              }}
+            />  ) : (
+              <View style={{backgroundColor:"#ccc", flex:1}}></View>
+            )
+          }
+          
         </View>
 
         <View style={styles.desc}>
